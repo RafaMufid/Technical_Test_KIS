@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tbl_participant_reasons', function (Blueprint $table) {
+        Schema::create('tbl_participant_reason', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('id_peserta')->constrained('tbl_participants')->onDelete('cascade');
+            $table->foreignUuid('id_peserta')->constrained('tbl_participant')->onDelete('cascade');
             $table->string('status');
             $table->string('catatan')->nullable();
             $table->string('alasan')->nullable();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tbl_participant_reasons');
+        Schema::dropIfExists('tbl_participant_reason');
     }
 };
