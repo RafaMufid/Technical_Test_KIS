@@ -31,7 +31,7 @@ composer install
 ### 2. Setup Database PostgreSQL via Docker
 Jalankan PostgreSQL container menggunakan port host `5433`:
 ```bash
-docker run --name lelang-postgres -e POSTGRES_DB=db_lelang_verifikasi -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=secret -p 5433:5432 -d postgres
+docker run --name lelang-postgres -e POSTGRES_DB=db_lelang_verifikasi -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=your_password -p 5433:5432 -d postgres
 ```
 
 ### 3. Konfigurasi Environment File
@@ -42,7 +42,7 @@ DB_HOST=127.0.0.1
 DB_PORT=5433
 DB_DATABASE=db_lelang_verifikasi
 DB_USERNAME=postgres
-DB_PASSWORD=secret
+DB_PASSWORD=your_password
 ```
 
 ### 4. Jalankan Migrasi & Database Seeder
