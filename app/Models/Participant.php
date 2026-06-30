@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Participant extends Model
 {
     use hasFactory;
-    protected $table = 'tbl_participant';
+    protected $table = 'tbl_participants';
     protected $keyType = 'string';
     public $incrementing = false;
 

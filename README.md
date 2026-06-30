@@ -1,59 +1,107 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Verifikasi Peserta Lelang (Laravel API)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Project ini adalah endpoint API untuk memverifikasi peserta lelang. Dibuat menggunakan **Laravel 11** dan **PostgreSQL** dengan menerapkan arsitektur *clean code* dan beberapa *design pattern* terbaik.
 
-## About Laravel
+## 🚀 Fitur & Pola Arsitektur
+- **Repository Pattern**: Memisahkan logika akses database dari controller dan service.
+- **Service Layer Pattern**: Memisahkan business logic verifikasi peserta lelang secara terisolasi.
+- **Database Transactions**: Menjamin konsistensi data jika terjadi kegagalan di tengah proses verifikasi.
+- **Form Request Validation**: Validasi input payload JSON di gerbang awal request.
+- **Auto-Generate PIN**: Generate 6-digit PIN acak jika peserta diterima (`BIDDING`).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠️ Persyaratan Sistem (Prerequisites)
+Sebelum menjalankan project ini, pastikan device Anda sudah terinstall:
+- PHP >= 8.2
+- Composer
+- Docker (untuk PostgreSQL)
+- Postman (atau API Testing Tool sejenis)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ⚙️ Cara Instalasi & Setup Project
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 1. Clone & Install Dependencies
+Masuk ke direktori project Anda dan jalankan perintah:
+```bash
+composer install
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 2. Setup Database PostgreSQL via Docker
+Jalankan PostgreSQL container menggunakan port host `5433`:
+```bash
+docker run --name lelang-postgres -e POSTGRES_DB=db_lelang_verifikasi -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=secret -p 5433:5432 -d postgres
+```
 
-## Laravel Sponsors
+### 3. Konfigurasi Environment File
+Salin file `.env.example` menjadi `.env` dan sesuaikan koneksi database Anda:
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5433
+DB_DATABASE=db_lelang_verifikasi
+DB_USERNAME=postgres
+DB_PASSWORD=secret
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 4. Jalankan Migrasi & Database Seeder
+Jalankan perintah ini untuk membuat tabel beserta data dummy peserta lelang:
+```bash
+php artisan migrate:fresh --seed
+```
 
-### Premium Partners
+### 5. Jalankan Server Lokal
+```bash
+php artisan serve
+```
+Aplikasi akan berjalan di `http://127.0.0.1:8000`.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 📖 Dokumentasi API Endpoint
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Verifikasi Peserta Lelang
+- **Endpoint**: `/api/participant/verify`
+- **Method**: `POST`
+- **Headers**:
+  - `Accept: application/json`
+  - `Content-Type: application/json`
 
-## Code of Conduct
+#### 1. Payload Terima Peserta (Skenario TERIMA)
+Mengubah status peserta menjadi `BIDDING` dan otomatis menghasilkan PIN bidding 6-digit.
+- **Request Body (JSON)**:
+```json
+{
+  "peserta": "7dd9cdc1-6183-4178-a687-3c5861b58532",
+  "status": "TERIMA",
+  "catatan": "Dokumen lengkap dan valid",
+  "alasan": "Memenuhi persyaratan dokumen"
+}
+```
+- **Response Success (200)**:
+```json
+{
+  "status_code": 200,
+  "message": "Berhasil memproses verifikasi peserta lelang"
+}
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### 2. Payload Tolak Peserta (Skenario TOLAK)
+Mengubah status peserta menjadi `DITOLAK` tanpa menghasilkan PIN (PIN tetap `null`).
+- **Request Body (JSON)**:
+```json
+{
+  "peserta": "8eed0e2b-2174-4b52-b131-4d1a3c631a78",
+  "status": "TOLAK",
+  "catatan": "KTP buram tidak terbaca",
+  "alasan": "Dokumen tidak valid"
+}
+```
+- **Response Success (200)**:
+```json
+{
+  "status_code": 200,
+  "message": "Berhasil memproses verifikasi peserta lelang"
+}
+```
