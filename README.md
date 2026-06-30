@@ -1,6 +1,6 @@
 # Sistem Verifikasi Peserta Lelang (Laravel API)
 
-Project ini adalah endpoint API untuk memverifikasi peserta lelang. Dibuat menggunakan **Laravel 11** dan **PostgreSQL** dengan menerapkan arsitektur *clean code* dan beberapa *design pattern* terbaik.
+Project ini adalah endpoint API untuk memverifikasi peserta lelang. Dibuat menggunakan **Laravel 11** dan **PostgreSQL** dengan menerapkan arsitektur clean code dan beberapa design pattern terbaik.
 
 ## 🚀 Fitur & Pola Arsitektur
 - **Repository Pattern**: Memisahkan logika akses database dari controller dan service.
